@@ -1,7 +1,7 @@
 package com.zr.addressselector.model;
 
-public class City  {
+public class Area {
     public long id;
-    public long province_id;
+    public long parentId;
     public String name;
 }
