@@ -1,4 +1,4 @@
-package com.zr.addressselector.widget;
+package com.zr.addressselector;
 
 import android.content.Context;
 import android.util.AttributeSet;

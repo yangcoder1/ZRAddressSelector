@@ -1,4 +1,4 @@
-package com.zr.addressselector.util;
+package com.zr.demo;
 
 import android.content.Context;
 import android.widget.Toast;
@@ -8,14 +8,6 @@ import android.widget.Toast;
  */
 
 public class ToastUtils {
-    /** Show long Toast.
-     *
-     *  @see Toast#makeText(Context, CharSequence, int)
-     *  @see Toast#LENGTH_LONG
-     */
-    public static void showLong(Context context, CharSequence text) {
-        Toast.makeText(context, text, Toast.LENGTH_LONG).show();
-    }
 
     /** Show short Toast.
      *

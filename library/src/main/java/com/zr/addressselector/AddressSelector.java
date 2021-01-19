@@ -21,10 +21,6 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.zr.addressselector.listener.OnAddressSelectedListener;
-import com.zr.addressselector.model.Area;
-import com.zr.addressselector.util.ListUtils;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,7 +53,7 @@ public class AddressSelector implements AdapterView.OnItemClickListener {
                 case WHAT_CITIES_PROVIDED:
                     cities = (List<Area>) msg.obj;
                     cityAdapter.notifyDataSetChanged();
-                    if (ListUtils.notEmpty(cities)) {
+                    if (notEmpty(cities)) {
                         // 以次级内容更新列表
                         listView.setAdapter(cityAdapter);
                         // 更新索引为次级
@@ -67,7 +63,7 @@ public class AddressSelector implements AdapterView.OnItemClickListener {
                         long provinceId = cities.get(0).parentId;
                         if (!province2city.containsKey(provinceId)) {
                             List<Area> cityList = new ArrayList<>();
-                            ListUtils.copy(cities, cityList);
+                            copy(cities, cityList);
                             province2city.put(provinceId, cityList);
 
 //                            System.out.println("***** save !!!!!");
@@ -84,7 +80,7 @@ public class AddressSelector implements AdapterView.OnItemClickListener {
                 case WHAT_COUNTIES_PROVIDED:
                     counties = (List<Area>) msg.obj;
                     countyAdapter.notifyDataSetChanged();
-                    if (ListUtils.notEmpty(counties)) {
+                    if (notEmpty(counties)) {
                         listView.setAdapter(countyAdapter);
                         tabIndex = INDEX_TAB_COUNTY;
 
@@ -92,7 +88,7 @@ public class AddressSelector implements AdapterView.OnItemClickListener {
                         long cityId = counties.get(0).parentId;
                         if (!city2county.containsKey(cityId)) {
                             List<Area> countyList = new ArrayList<>();
-                            ListUtils.copy(counties, countyList);
+                            copy(counties, countyList);
                             city2county.put(cityId, countyList);
                         }
 
@@ -105,14 +101,14 @@ public class AddressSelector implements AdapterView.OnItemClickListener {
                 case WHAT_STREETS_PROVIDED:
                     streets = (List<Area>) msg.obj;
                     streetAdapter.notifyDataSetChanged();
-                    if (ListUtils.notEmpty(streets)) {
+                    if (notEmpty(streets)) {
                         listView.setAdapter(streetAdapter);
                         tabIndex = INDEX_TAB_STREET;
                         // 缓存市-区数据
                         long countryId = streets.get(0).parentId;
                         if (!county2street.containsKey(countryId)) {
                             List<Area> streetList = new ArrayList<>();
-                            ListUtils.copy(streets, streetList);
+                            copy(streets, streetList);
                             county2street.put(countryId, streetList);
                         }
                     } else {
@@ -181,6 +177,31 @@ public class AddressSelector implements AdapterView.OnItemClickListener {
 
         initViews();
         initAdapters();
+    }
+
+    public static boolean isEmpty(List list) {
+        return list == null || list.size() == 0;
+    }
+
+    public static boolean notEmpty(List list) {
+        return list != null && list.size() > 0;
+    }
+
+    /**
+     * 深拷贝list
+     * @param src
+     * @param dest
+     */
+    public static void copy(List src,List dest) {
+        for (int i = 0; i < src.size(); i++){
+            Object obj = src.get(i);
+            if (obj instanceof List){
+                dest.add(new ArrayList());
+                copy((List) obj, (List) ((List) dest).get(i));
+            }else{
+                dest.add(obj);
+            }
+        }
     }
 
     private void initAdapters() {
@@ -287,6 +308,17 @@ public class AddressSelector implements AdapterView.OnItemClickListener {
         return set;
     }
 
+    public interface OnAddressSelectedListener {
+        // 获取地址完成回调
+        void onAddressSelected(Area province, Area city, Area county, Area street);
+        // 选取省份完成回调
+        void onProvinceSelected(Area province);
+        // 选取城市完成回调
+        void onCitySelected(Area city);
+        // 选取区/县完成回调
+        void onCountySelected(Area county);
+    }
+
     private class OnProvinceTabClickListener implements View.OnClickListener {
 
         @Override
@@ -349,10 +381,10 @@ public class AddressSelector implements AdapterView.OnItemClickListener {
     }
 
     private void updateTabsVisibility() {
-        textViewProvince.setVisibility(ListUtils.notEmpty(provinces) ? View.VISIBLE : View.GONE);
-        textViewCity.setVisibility(ListUtils.notEmpty(cities) ? View.VISIBLE : View.GONE);
-        textViewCounty.setVisibility(ListUtils.notEmpty(counties) ? View.VISIBLE : View.GONE);
-        textViewStreet.setVisibility(ListUtils.notEmpty(streets) ? View.VISIBLE : View.GONE);
+        textViewProvince.setVisibility(notEmpty(provinces) ? View.VISIBLE : View.GONE);
+        textViewCity.setVisibility(notEmpty(cities) ? View.VISIBLE : View.GONE);
+        textViewCounty.setVisibility(notEmpty(counties) ? View.VISIBLE : View.GONE);
+        textViewStreet.setVisibility(notEmpty(streets) ? View.VISIBLE : View.GONE);
 
         textViewProvince.setEnabled(tabIndex != INDEX_TAB_PROVINCE);
         textViewCity.setEnabled(tabIndex != INDEX_TAB_CITY);
@@ -798,7 +830,7 @@ public class AddressSelector implements AdapterView.OnItemClickListener {
         long provinceId = cities.get(0).parentId;
         if (!province2city.containsKey(provinceId)) {
             List<Area> cityList = new ArrayList<>();
-            ListUtils.copy(cities, cityList);
+            copy(cities, cityList);
             province2city.put(provinceId, cityList);
         }
 
@@ -821,7 +853,7 @@ public class AddressSelector implements AdapterView.OnItemClickListener {
         long cityId = counties.get(0).parentId;
         if (!city2county.containsKey(cityId)) {
             List<Area> countyList = new ArrayList<>();
-            ListUtils.copy(counties, countyList);
+            copy(counties, countyList);
             city2county.put(cityId, countyList);
         }
 
@@ -841,4 +873,9 @@ public class AddressSelector implements AdapterView.OnItemClickListener {
         updateIndicator();
     }
 
+    public static class Area {
+        public long id;
+        public long parentId;
+        public String name;
+    }
 }

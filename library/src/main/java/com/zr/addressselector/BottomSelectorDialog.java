@@ -6,11 +6,13 @@ import android.view.Gravity;
 import android.view.Window;
 import android.view.WindowManager;
 
-import com.zr.addressselector.listener.OnAddressSelectedListener;
-import com.zr.addressselector.util.ResUtils;
-
 
 public class BottomSelectorDialog extends Dialog {
+
+    public static int dp2px (Context context, float dipValue) {
+        final float scale = context.getResources().getDisplayMetrics().density;
+        return (int)(dipValue*scale + 0.5f);
+    }
 
     public AddressSelector getSelector() {
         return selector;
@@ -41,13 +43,13 @@ public class BottomSelectorDialog extends Dialog {
         Window window = getWindow();
         WindowManager.LayoutParams params = window.getAttributes();
         params.width = WindowManager.LayoutParams.MATCH_PARENT;
-        params.height = ResUtils.dp2px(context, 256);
+        params.height = dp2px(context, 256);
         window.setAttributes(params);
 
         window.setGravity(Gravity.BOTTOM);
     }
 
-    public void setOnAddressSelectedListener(OnAddressSelectedListener listener) {
+    public void setOnAddressSelectedListener(AddressSelector.OnAddressSelectedListener listener) {
         this.selector.setOnAddressSelectedListener(listener);
     }
 
@@ -55,7 +57,7 @@ public class BottomSelectorDialog extends Dialog {
         return show(context, null);
     }
 
-    public static BottomSelectorDialog show(Context context, OnAddressSelectedListener listener) {
+    public static BottomSelectorDialog show(Context context, AddressSelector.OnAddressSelectedListener listener) {
         BottomSelectorDialog dialog = new BottomSelectorDialog(context, R.style.bottom_dialog);
         dialog.selector.setOnAddressSelectedListener(listener);
         dialog.show();
@@ -68,4 +70,5 @@ public class BottomSelectorDialog extends Dialog {
         super.dismiss();
         this.selector.clearCacheData();
     }
+
 }
