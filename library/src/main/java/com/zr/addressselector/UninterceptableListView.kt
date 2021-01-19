@@ -1,26 +1,17 @@
-package com.zr.addressselector;
+package com.zr.addressselector
 
-import android.content.Context;
-import android.util.AttributeSet;
-import android.view.MotionEvent;
-import android.widget.ListView;
+import android.content.Context
+import android.util.AttributeSet
+import android.view.MotionEvent
+import android.widget.ListView
 
-public class UninterceptableListView extends ListView {
-    public UninterceptableListView(Context context) {
-        super(context);
-    }
+class UninterceptableListView : ListView {
+    constructor(context: Context?) : super(context)
+    constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs)
+    constructor(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 
-    public UninterceptableListView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-    }
-
-    public UninterceptableListView(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-    }
-
-    @Override
-    public boolean onTouchEvent(MotionEvent ev) {
-        getParent().requestDisallowInterceptTouchEvent(true);
-        return super.onTouchEvent(ev);
+    override fun onTouchEvent(ev: MotionEvent): Boolean {
+        parent.requestDisallowInterceptTouchEvent(true)
+        return super.onTouchEvent(ev)
     }
 }

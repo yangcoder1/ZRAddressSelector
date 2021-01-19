@@ -1,4 +1,5 @@
 apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
 apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'com.jfrog.bintray'
 def siteUrl = 'https://github.com/yushiwo/ZRAddressSelector.git'
@@ -34,6 +35,7 @@ dependencies {
     })
     compile 'com.android.support:appcompat-v7:25.1.0'
     testCompile 'junit:junit:4.12'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }
 
 install {
@@ -96,5 +98,8 @@ bintray {
         licenses = ["Apache-2.0"]
         publish = true
     }
+}
+repositories {
+    mavenCentral()
 }
 

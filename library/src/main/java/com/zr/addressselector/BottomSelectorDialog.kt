@@ -1,74 +1,60 @@
-package com.zr.addressselector;
+package com.zr.addressselector
 
-import android.app.Dialog;
-import android.content.Context;
-import android.view.Gravity;
-import android.view.Window;
-import android.view.WindowManager;
+import android.app.Dialog
+import android.content.Context
+import android.content.DialogInterface
+import android.view.Gravity
+import android.view.WindowManager
+import com.zr.addressselector.AddressSelector.OnAddressSelectedListener
 
+class BottomSelectorDialog : Dialog {
+    var selector: AddressSelector? = null
+        private set
 
-public class BottomSelectorDialog extends Dialog {
-
-    public static int dp2px (Context context, float dipValue) {
-        final float scale = context.getResources().getDisplayMetrics().density;
-        return (int)(dipValue*scale + 0.5f);
+    constructor(context: Context) : super(context, R.style.bottom_dialog) {
+        init(context)
     }
 
-    public AddressSelector getSelector() {
-        return selector;
+    constructor(context: Context, themeResId: Int) : super(context, themeResId) {
+        init(context)
     }
 
-    private AddressSelector selector;
-
-    public BottomSelectorDialog(Context context) {
-        super(context, R.style.bottom_dialog);
-        init(context);
+    constructor(context: Context, cancelable: Boolean, cancelListener: DialogInterface.OnCancelListener?) : super(context, cancelable, cancelListener) {
+        init(context)
     }
 
-    public BottomSelectorDialog(Context context, int themeResId) {
-        super(context, themeResId);
-        init(context);
+    private fun init(context: Context) {
+        selector = AddressSelector(context)
+        setContentView(selector!!.view)
+        val window = window
+        val params = window.attributes
+        params.width = WindowManager.LayoutParams.MATCH_PARENT
+        params.height = dp2px(context, 256f)
+        window.attributes = params
+        window.setGravity(Gravity.BOTTOM)
     }
 
-    public BottomSelectorDialog(Context context, boolean cancelable, OnCancelListener cancelListener) {
-        super(context, cancelable, cancelListener);
-        init(context);
+    fun setOnAddressSelectedListener(listener: OnAddressSelectedListener?) {
+        selector!!.onAddressSelectedListener = listener
     }
 
-    private void init(Context context) {
-        selector = new AddressSelector(context);
-
-        setContentView(selector.getView());
-
-        Window window = getWindow();
-        WindowManager.LayoutParams params = window.getAttributes();
-        params.width = WindowManager.LayoutParams.MATCH_PARENT;
-        params.height = dp2px(context, 256);
-        window.setAttributes(params);
-
-        window.setGravity(Gravity.BOTTOM);
+    override fun dismiss() {
+        super.dismiss()
+        selector!!.clearCacheData()
     }
 
-    public void setOnAddressSelectedListener(AddressSelector.OnAddressSelectedListener listener) {
-        this.selector.setOnAddressSelectedListener(listener);
+    companion object {
+        fun dp2px(context: Context, dipValue: Float): Int {
+            val scale = context.resources.displayMetrics.density
+            return (dipValue * scale + 0.5f).toInt()
+        }
+
+        @JvmOverloads
+        fun show(context: Context, listener: OnAddressSelectedListener? = null): BottomSelectorDialog {
+            val dialog = BottomSelectorDialog(context, R.style.bottom_dialog)
+            dialog.selector!!.onAddressSelectedListener = listener
+            dialog.show()
+            return dialog
+        }
     }
-
-    public static BottomSelectorDialog show(Context context) {
-        return show(context, null);
-    }
-
-    public static BottomSelectorDialog show(Context context, AddressSelector.OnAddressSelectedListener listener) {
-        BottomSelectorDialog dialog = new BottomSelectorDialog(context, R.style.bottom_dialog);
-        dialog.selector.setOnAddressSelectedListener(listener);
-        dialog.show();
-
-        return dialog;
-    }
-
-    @Override
-    public void dismiss() {
-        super.dismiss();
-        this.selector.clearCacheData();
-    }
-
 }
