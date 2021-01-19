@@ -40,6 +40,7 @@ dependencies {
     compile project(':library')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 //    compile 'com.zr.addressselector:library:1.0.0'
+    implementation "io.reactivex.rxjava2:rxjava:2.2.20"
 
 }
 repositories {

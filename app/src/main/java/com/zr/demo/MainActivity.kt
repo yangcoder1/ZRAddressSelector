@@ -1,16 +1,19 @@
 package com.zr.demo
 
 import android.os.Bundle
-import android.os.Handler
 import android.support.v7.app.AppCompatActivity
 import android.widget.Button
 import com.zr.addressselector.AddressSelector
 import com.zr.addressselector.AddressSelector.OnAddressSelectedListener
 import com.zr.addressselector.BottomSelectorDialog
+import io.reactivex.disposables.Disposable
+import io.reactivex.Observable
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity(), OnAddressSelectedListener {
     var dialog: BottomSelectorDialog? = null
+    var disposable: Disposable? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -20,12 +23,13 @@ class MainActivity : AppCompatActivity(), OnAddressSelectedListener {
             dialog!!.setOnAddressSelectedListener(this@MainActivity)
             dialog!!.show()
             // TODO: 17/2/7 实时请求省份数据
-            Handler().postDelayed({
+            disposable?.dispose()
+            disposable = Observable.timer(3, TimeUnit.SECONDS).subscribe {
                 val province = AddressSelector.Area()
                 province.id = 1
                 province.name = "浙江省"
                 dialog!!.selector!!.setProvinces(listOf(province))
-            }, 3000)
+            }
             //                dialog.getSelector().setAreas(null);
         }
         val hasMsgButton = findViewById(R.id.buttonBottomDialogWithMessage) as Button
@@ -87,7 +91,8 @@ class MainActivity : AppCompatActivity(), OnAddressSelectedListener {
         //        ToastUtil.showToast("点击新省份,获取市数据");
 
         // TODO: 2017/2/5 请求城市数据
-        Handler().postDelayed({
+        disposable?.dispose()
+        disposable = Observable.timer(3, TimeUnit.SECONDS).subscribe {
             val city1 = AddressSelector.Area()
             city1.parentId = province!!.id
             city1.id = province.id * 100 + 1
@@ -100,7 +105,7 @@ class MainActivity : AppCompatActivity(), OnAddressSelectedListener {
             list.add(city1)
             list.add(city2)
             dialog!!.selector!!.setCities(list)
-        }, 3000)
+        }
     }
 
     override fun onCitySelected(city: AddressSelector.Area?) {
@@ -108,7 +113,8 @@ class MainActivity : AppCompatActivity(), OnAddressSelectedListener {
         //        ToastUtil.showToast("点击新城市,获取区县数据");
 
         // TODO: 2017/2/5 请求县乡数据
-        Handler().postDelayed({
+        disposable?.dispose()
+        disposable = Observable.timer(3, TimeUnit.SECONDS).subscribe {
             if (city.id == 101L) {
                 val county11 = AddressSelector.Area()
                 county11.parentId = city.id
@@ -136,19 +142,26 @@ class MainActivity : AppCompatActivity(), OnAddressSelectedListener {
                 list2.add(county22)
                 dialog!!.selector!!.setCountries(list2)
             }
-        }, 3000)
+        }
     }
 
     override fun onCountySelected(county: AddressSelector.Area?) {
         println("onAreaSelected")
         //        ToastUtil.showToast("点击新区县数据,获取街道数据");
         // TODO: 17/2/7 实时获取街道信息
-        Handler().postDelayed({
+
+        disposable?.dispose()
+        disposable = Observable.timer(3, TimeUnit.SECONDS).subscribe {
             val street = AddressSelector.Area()
             street.id = county!!.id * 100 + 1
             street.parentId = county.id
             street.name = "街道_" + street.id
             dialog!!.selector!!.setStreets(listOf(street))
-        }, 3000)
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        disposable?.dispose()
     }
 }
