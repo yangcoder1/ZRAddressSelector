@@ -1,6 +1,7 @@
 package com.zr.demo
 
 import android.os.Bundle
+import android.os.Handler
 import android.support.v7.app.AppCompatActivity
 import android.widget.Button
 import com.zr.addressselector.AddressSelector
@@ -19,10 +20,12 @@ class MainActivity : AppCompatActivity(), OnAddressSelectedListener {
             dialog!!.setOnAddressSelectedListener(this@MainActivity)
             dialog!!.show()
             // TODO: 17/2/7 实时请求省份数据
-            val province = AddressSelector.Area()
-            province.id = 1
-            province.name = "浙江省"
-            dialog!!.selector!!.setProvinces(listOf(province))
+            Handler().postDelayed({
+                val province = AddressSelector.Area()
+                province.id = 1
+                province.name = "浙江省"
+                dialog!!.selector!!.setProvinces(listOf(province))
+            }, 3000)
             //                dialog.getSelector().setAreas(null);
         }
         val hasMsgButton = findViewById(R.id.buttonBottomDialogWithMessage) as Button
@@ -84,18 +87,20 @@ class MainActivity : AppCompatActivity(), OnAddressSelectedListener {
         //        ToastUtil.showToast("点击新省份,获取市数据");
 
         // TODO: 2017/2/5 请求城市数据
-        val city1 = AddressSelector.Area()
-        city1.parentId = province!!.id
-        city1.id = province.id * 100 + 1
-        city1.name = "杭州市"
-        val city2 = AddressSelector.Area()
-        city2.parentId = province.id
-        city2.id = province.id * 100 + 2
-        city2.name = "衢州市"
-        val list: MutableList<AddressSelector.Area> = ArrayList()
-        list.add(city1)
-        list.add(city2)
-        dialog!!.selector!!.setCities(list)
+        Handler().postDelayed({
+            val city1 = AddressSelector.Area()
+            city1.parentId = province!!.id
+            city1.id = province.id * 100 + 1
+            city1.name = "杭州市"
+            val city2 = AddressSelector.Area()
+            city2.parentId = province.id
+            city2.id = province.id * 100 + 2
+            city2.name = "衢州市"
+            val list: MutableList<AddressSelector.Area> = ArrayList()
+            list.add(city1)
+            list.add(city2)
+            dialog!!.selector!!.setCities(list)
+        }, 3000)
     }
 
     override fun onCitySelected(city: AddressSelector.Area?) {
@@ -103,43 +108,47 @@ class MainActivity : AppCompatActivity(), OnAddressSelectedListener {
         //        ToastUtil.showToast("点击新城市,获取区县数据");
 
         // TODO: 2017/2/5 请求县乡数据
-        if (city.id == 101L) {
-            val county11 = AddressSelector.Area()
-            county11.parentId = city.id
-            county11.id = city.id * 100 + 1
-            county11.name = "西湖区"
-            val county12 = AddressSelector.Area()
-            county12.parentId = city.id
-            county12.id = city.id * 100 + 2
-            county12.name = "滨江区"
-            val list: MutableList<AddressSelector.Area> = ArrayList()
-            list.add(county11)
-            list.add(county12)
-            dialog!!.selector!!.setCountries(list)
-        } else if (city.id == 102L) {
-            val county21 = AddressSelector.Area()
-            county21.parentId = city.id
-            county21.id = city.id * 100 + 1
-            county21.name = "衢江区"
-            val county22 = AddressSelector.Area()
-            county22.parentId = city.id
-            county22.id = city.id * 100 + 2
-            county22.name = "江山县"
-            val list2: MutableList<AddressSelector.Area> = ArrayList()
-            list2.add(county21)
-            list2.add(county22)
-            dialog!!.selector!!.setCountries(list2)
-        }
+        Handler().postDelayed({
+            if (city.id == 101L) {
+                val county11 = AddressSelector.Area()
+                county11.parentId = city.id
+                county11.id = city.id * 100 + 1
+                county11.name = "西湖区"
+                val county12 = AddressSelector.Area()
+                county12.parentId = city.id
+                county12.id = city.id * 100 + 2
+                county12.name = "滨江区"
+                val list: MutableList<AddressSelector.Area> = ArrayList()
+                list.add(county11)
+                list.add(county12)
+                dialog!!.selector!!.setCountries(list)
+            } else if (city.id == 102L) {
+                val county21 = AddressSelector.Area()
+                county21.parentId = city.id
+                county21.id = city.id * 100 + 1
+                county21.name = "衢江区"
+                val county22 = AddressSelector.Area()
+                county22.parentId = city.id
+                county22.id = city.id * 100 + 2
+                county22.name = "江山县"
+                val list2: MutableList<AddressSelector.Area> = ArrayList()
+                list2.add(county21)
+                list2.add(county22)
+                dialog!!.selector!!.setCountries(list2)
+            }
+        }, 3000)
     }
 
     override fun onCountySelected(county: AddressSelector.Area?) {
         println("onAreaSelected")
         //        ToastUtil.showToast("点击新区县数据,获取街道数据");
         // TODO: 17/2/7 实时获取街道信息
-        val street = AddressSelector.Area()
-        street.id = county!!.id * 100 + 1
-        street.parentId = county.id
-        street.name = "街道_" + street.id
-        dialog!!.selector!!.setStreets(listOf(street))
+        Handler().postDelayed({
+            val street = AddressSelector.Area()
+            street.id = county!!.id * 100 + 1
+            street.parentId = county.id
+            street.name = "街道_" + street.id
+            dialog!!.selector!!.setStreets(listOf(street))
+        }, 3000)
     }
 }
