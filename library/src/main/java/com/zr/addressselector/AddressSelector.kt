@@ -39,9 +39,6 @@ class AddressSelector(private val context: Context,var isShowStreet: Boolean = f
                         val cityList: MutableList<Area> = ArrayList()
                         copy(cities, cityList)
                         province2city[provinceId] = cityList
-
-//                            System.out.println("***** save !!!!!");
-//                            System.out.println("cities = " + cities.toString());
                     }
                 } else {
                     // 次级无内容，回调
