@@ -16,7 +16,7 @@ import android.widget.*
 import android.widget.AdapterView.OnItemClickListener
 import java.util.*
 
-class AddressSelector(private val context: Context) : OnItemClickListener {
+class AddressSelector(private val context: Context,var isShowStreet: Boolean = false) : OnItemClickListener {
     private val handler = Handler { msg ->
         when (msg.what) {
             WHAT_PROVINCES_PROVIDED -> {
@@ -351,12 +351,18 @@ class AddressSelector(private val context: Context) : OnItemClickListener {
                 streetIndex = INDEX_INVALID
                 countyAdapter!!.notifyDataSetChanged()
 
-                // 有缓存则直接使用缓存,否则去重新请求
-                if (county2street.containsKey(county.id)) {
-                    setStreets(county2street[county.id])
+                // 如果显示街道
+                if (isShowStreet) {
+                    // 有缓存则直接使用缓存,否则去重新请求
+                    if (county2street.containsKey(county.id)) {
+                        setStreets(county2street[county.id])
+                    } else {
+                        progressBar!!.visibility = View.VISIBLE
+                        onAddressSelectedListener!!.onCountySelected(county)
+                    }
                 } else {
-                    progressBar!!.visibility = View.VISIBLE
-                    onAddressSelectedListener!!.onCountySelected(county)
+                    // 如果不显示街道，直接结束
+                    callbackInternal()
                 }
             }
             INDEX_TAB_STREET -> {

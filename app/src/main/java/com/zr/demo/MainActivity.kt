@@ -21,45 +21,46 @@ class MainActivity : AppCompatActivity(), OnAddressSelectedListener {
         buttonBottomDialog.setOnClickListener {
             dialog = BottomSelectorDialog(this@MainActivity)
             dialog!!.setOnAddressSelectedListener(this@MainActivity)
+            dialog!!.selector!!.isShowStreet = false
             dialog!!.show()
             // TODO: 17/2/7 实时请求省份数据
             disposable?.dispose()
             disposable = getProvinces()
         }
-        val hasMsgButton = findViewById(R.id.buttonBottomDialogWithMessage) as Button
-        hasMsgButton.setOnClickListener {
-            val province = AddressSelector.Area()
-            province.id = 1
-            province.name = "省份" + province.id
-            val provinces = listOf(province)
-            val city1 = AddressSelector.Area()
-            city1.parentId = province.id
-            city1.id = province.id * 100 + 1
-            city1.name = "城市" + city1.id
-            val city2 = AddressSelector.Area()
-            city2.parentId = province.id
-            city2.id = province.id * 100 + 2
-            city2.name = "城市" + city2.id
-            val cities: MutableList<AddressSelector.Area> = ArrayList()
-            cities.add(city1)
-            cities.add(city2)
-            val cityid: Long = 101
-            val county11 = AddressSelector.Area()
-            county11.parentId = cityid
-            county11.id = cityid * 100 + 1
-            county11.name = "区县" + county11.id
-            val county12 = AddressSelector.Area()
-            county12.parentId = cityid
-            county12.id = cityid * 100 + 2
-            county12.name = "区县" + county12.id
-            val counties: MutableList<AddressSelector.Area> = ArrayList()
-            counties.add(county11)
-            counties.add(county12)
-            dialog = BottomSelectorDialog(this@MainActivity)
-            dialog!!.setOnAddressSelectedListener(this@MainActivity)
-            dialog!!.show()
-            dialog!!.selector!!.setAddressSelector(provinces, 0, cities, 0, counties, 0)
-        }
+//        val hasMsgButton = findViewById(R.id.buttonBottomDialogWithMessage) as Button
+//        hasMsgButton.setOnClickListener {
+//            val province = AddressSelector.Area()
+//            province.id = 1
+//            province.name = "省份" + province.id
+//            val provinces = listOf(province)
+//            val city1 = AddressSelector.Area()
+//            city1.parentId = province.id
+//            city1.id = province.id * 100 + 1
+//            city1.name = "城市" + city1.id
+//            val city2 = AddressSelector.Area()
+//            city2.parentId = province.id
+//            city2.id = province.id * 100 + 2
+//            city2.name = "城市" + city2.id
+//            val cities: MutableList<AddressSelector.Area> = ArrayList()
+//            cities.add(city1)
+//            cities.add(city2)
+//            val cityid: Long = 101
+//            val county11 = AddressSelector.Area()
+//            county11.parentId = cityid
+//            county11.id = cityid * 100 + 1
+//            county11.name = "区县" + county11.id
+//            val county12 = AddressSelector.Area()
+//            county12.parentId = cityid
+//            county12.id = cityid * 100 + 2
+//            county12.name = "区县" + county12.id
+//            val counties: MutableList<AddressSelector.Area> = ArrayList()
+//            counties.add(county11)
+//            counties.add(county12)
+//            dialog = BottomSelectorDialog(this@MainActivity)
+//            dialog!!.setOnAddressSelectedListener(this@MainActivity)
+//            dialog!!.show()
+//            dialog!!.selector!!.setAddressSelector(provinces, 0, cities, 0, counties, 0)
+//        }
     }
 
 
@@ -90,7 +91,7 @@ class MainActivity : AppCompatActivity(), OnAddressSelectedListener {
     }
 
     private fun getProvinces() =
-            Observable.timer(3, TimeUnit.SECONDS).subscribe {
+            Observable.timer(1, TimeUnit.SECONDS).subscribe {
                 val province = AddressSelector.Area()
                 province.id = 1
                 province.name = "浙江省"
@@ -98,7 +99,7 @@ class MainActivity : AppCompatActivity(), OnAddressSelectedListener {
             }
 
     private fun getCities(province: AddressSelector.Area?) =
-            Observable.timer(3, TimeUnit.SECONDS).subscribe {
+            Observable.timer(1, TimeUnit.SECONDS).subscribe {
                 val city1 = AddressSelector.Area()
                 city1.parentId = province!!.id
                 city1.id = province.id * 100 + 1
@@ -114,7 +115,7 @@ class MainActivity : AppCompatActivity(), OnAddressSelectedListener {
             }
 
     private fun getCounties(city: AddressSelector.Area) =
-            Observable.timer(3, TimeUnit.SECONDS).subscribe {
+            Observable.timer(1, TimeUnit.SECONDS).subscribe {
                 if (city.id == 101L) {
                     val county11 = AddressSelector.Area()
                     county11.parentId = city.id
@@ -145,7 +146,7 @@ class MainActivity : AppCompatActivity(), OnAddressSelectedListener {
             }
 
     private fun getStreets(county: AddressSelector.Area?) =
-            Observable.timer(3, TimeUnit.SECONDS).subscribe {
+            Observable.timer(1, TimeUnit.SECONDS).subscribe {
                 val street = AddressSelector.Area()
                 street.id = county!!.id * 100 + 1
                 street.parentId = county.id
