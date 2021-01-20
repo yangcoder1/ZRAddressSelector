@@ -7,13 +7,13 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Handler
 import android.os.Message
-import android.support.v4.util.ArrayMap
-import android.support.v4.view.animation.FastOutSlowInInterpolator
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import android.widget.AdapterView.OnItemClickListener
+import androidx.collection.ArrayMap
+import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import java.util.*
 
 class AddressSelector(private val context: Context,var isShowStreet: Boolean = false) : OnItemClickListener {
